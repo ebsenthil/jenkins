@@ -68,8 +68,8 @@ ingress {
 
   ingress {
     description      = "allow http"
-    from_port        = 80
-    to_port          = 80
+    from_port        = 8080
+    to_port          = 8080
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
 
@@ -103,16 +103,16 @@ resource "aws_instance" "sen-test-vm" {
 provisioner "remote-exec" {
 inline = [
 "sudo dnf update", #To Install Latest Update
-"sudo dnf install -y nginx", # Install Nginx
-"sudo systemctl start nginx.service", # Start Nginx Server
-"sudo chmod 777 /usr/share/nginx/html/index.html"
+"sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo",
+"sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key",
+"sudo yum upgrade",
+"sudo dnf install java-11-amazon-corretto -y",  #install java
+"sudo yum install jenkins -y",
+"sudo systemctl enable jenkins",
+"sudo systemctl status jenkins"
     ]
   }
 
 
-provisioner "file" {
-    source      = "index.html"
-    destination = "/usr/share/nginx/html/index.html"
-  }
-
-  }
+ }
