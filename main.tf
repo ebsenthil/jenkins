@@ -98,6 +98,10 @@ resource "aws_instance" "sen-test-vm" {
     private_key = file("~/.ssh/id_rsa")
     host = self.public_ip
   }
+
+tags = {
+name = "sen-vm-tf"
+}
   
 
 provisioner "remote-exec" {
